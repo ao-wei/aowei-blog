@@ -1,0 +1,22 @@
+{
+  "name": "aowei-blog",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "ASTRO_TELEMETRY_DISABLED=1 astro dev",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
+    "astro": "ASTRO_TELEMETRY_DISABLED=1 astro"
+  },
+  "dependencies": {
+    "astro": "^6.3.7",
+    "rollup": "npm:@rollup/wasm-node@^4.60.4"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3"
+  }
+}

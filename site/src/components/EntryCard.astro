@@ -1,0 +1,38 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description: string;
+  date?: Date;
+  status?: string;
+  tags?: string[];
+}
+
+const { href, title, description, date, status, tags = [] } = Astro.props;
+
+const formattedDate = date
+  ? new Intl.DateTimeFormat('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).format(date)
+  : undefined;
+---
+
+<a class="entry-card" href={href}>
+  <div class="entry-meta">
+    {formattedDate && <span>{formattedDate}</span>}
+    {status && <span>{status}</span>}
+  </div>
+  <h3>{title}</h3>
+  <p>{description}</p>
+  {
+    tags.length > 0 && (
+      <div class="tags">
+        {tags.map((tag) => (
+          <span class="tag">{tag}</span>
+        ))}
+      </div>
+    )
+  }
+</a>

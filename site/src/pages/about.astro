@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="About" description="About this blog.">
+  <article class="prose">
+    <header class="prose-header">
+      <p class="eyebrow">About</p>
+      <h1>关于这里</h1>
+      <p class="prose-description">
+        这是一个用于长期记录和发布项目入口的个人站点。
+      </p>
+    </header>
+    <div class="prose-content">
+      <p>
+        这个博客的第一目标是可维护：文章和项目都用 Markdown 管理，站点静态构建，部署后可以公网访问。
+      </p>
+      <p>
+        后续这里会逐步沉淀源码阅读、AI 工程实践、比赛复盘，以及一些可以通过链接直接访问的小项目。
+      </p>
+    </div>
+  </article>
+</BaseLayout>

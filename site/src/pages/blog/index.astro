@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EntryCard from '../../components/EntryCard.astro';
+
+const posts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
+---
+
+<BaseLayout title="Blog" description="Articles and notes.">
+  <section class="section hero">
+    <p class="eyebrow">Blog</p>
+    <h1>文章</h1>
+    <p class="lead">用 Markdown 记录源码阅读、工程实践、比赛复盘和长期学习笔记。</p>
+  </section>
+
+  <section class="section">
+    {
+      posts.length > 0 ? (
+        <div class="grid">
+          {posts.map((post) => (
+            <EntryCard
+              href={`/blog/${post.id}`}
+              title={post.data.title}
+              description={post.data.description}
+              date={post.data.published}
+              tags={post.data.tags}
+            />
+          ))}
+        </div>
+      ) : (
+        <p class="empty-state">还没有公开文章。</p>
+      )
+    }
+  </section>
+</BaseLayout>

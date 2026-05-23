@@ -1,0 +1,52 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Aowei Blog',
+  description = 'Personal notes, technical essays, and project links.',
+} = Astro.props;
+
+const pageTitle = title === 'Aowei Blog' ? title : `${title} | Aowei Blog`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <div class="site-shell">
+      <header class="site-header">
+        <nav class="nav" aria-label="Primary navigation">
+          <a class="brand" href="/">
+            <span class="brand-mark" aria-hidden="true">A</span>
+            <span>Aowei Blog</span>
+          </a>
+          <div class="nav-links">
+            <a href="/blog">Blog</a>
+            <a href="/projects">Projects</a>
+            <a href="/about">About</a>
+          </div>
+        </nav>
+      </header>
+      <main class="site-main">
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <div class="footer-inner">
+          <span>© {new Date().getFullYear()} Aowei</span>
+          <span>Built with Astro and Markdown.</span>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
