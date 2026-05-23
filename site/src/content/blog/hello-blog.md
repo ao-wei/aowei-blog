@@ -13,3 +13,6 @@ draft: false
 - 后续可以通过项目页链接到更多有意思的项目。
 
 当前采用 `Astro + Markdown`，先把内容结构搭好，再逐步增加 RSS、sitemap、评论等增强功能。
+
+
+**注意，这是在测试cloudflare自动部署功能**
