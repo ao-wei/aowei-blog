@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import OnekoPatrol from '../components/OnekoPatrol.astro';
 
 interface Props {
   title?: string;
@@ -41,6 +42,7 @@ const pageTitle = title === 'Aowei Blog' ? title : `${title} | Aowei Blog`;
       <main class="site-main">
         <slot />
       </main>
+      <OnekoPatrol />
       <footer class="site-footer">
         <div class="footer-inner">
           <span>© {new Date().getFullYear()} Aowei</span>

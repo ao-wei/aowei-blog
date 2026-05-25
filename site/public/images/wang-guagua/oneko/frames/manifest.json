@@ -1,0 +1,322 @@
+[
+  {
+    "filename": "01-scratch-wall-n-1.png",
+    "label": "scratchWallN 1",
+    "row": 1,
+    "column": 1,
+    "x": 0,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "02-nw-run-1.png",
+    "label": "NW 1",
+    "row": 1,
+    "column": 2,
+    "x": 32,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "03-sleep-1.png",
+    "label": "sleep 1",
+    "row": 1,
+    "column": 3,
+    "x": 64,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "04-e-run-1.png",
+    "label": "E 1",
+    "row": 1,
+    "column": 4,
+    "x": 96,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "05-scratch-wall-w-1.png",
+    "label": "scratchWallW 1",
+    "row": 1,
+    "column": 5,
+    "x": 128,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "06-self-scratch-1.png",
+    "label": "self scratch 1",
+    "row": 1,
+    "column": 6,
+    "x": 160,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "07-self-scratch-2.png",
+    "label": "self scratch 2",
+    "row": 1,
+    "column": 7,
+    "x": 192,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "08-self-scratch-3.png",
+    "label": "self scratch 3",
+    "row": 1,
+    "column": 8,
+    "x": 224,
+    "y": 0,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "09-scratch-wall-n-2.png",
+    "label": "scratchWallN 2",
+    "row": 2,
+    "column": 1,
+    "x": 0,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "10-nw-run-2.png",
+    "label": "NW 2",
+    "row": 2,
+    "column": 2,
+    "x": 32,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "11-sleep-2.png",
+    "label": "sleep 2",
+    "row": 2,
+    "column": 3,
+    "x": 64,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "12-e-run-2.png",
+    "label": "E 2",
+    "row": 2,
+    "column": 4,
+    "x": 96,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "13-scratch-wall-w-2.png",
+    "label": "scratchWallW 2",
+    "row": 2,
+    "column": 5,
+    "x": 128,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "14-se-run-1.png",
+    "label": "SE 1",
+    "row": 2,
+    "column": 6,
+    "x": 160,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "15-sw-run-2.png",
+    "label": "SW 2",
+    "row": 2,
+    "column": 7,
+    "x": 192,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "16-scratch-wall-s-1.png",
+    "label": "scratchWallS 1",
+    "row": 2,
+    "column": 8,
+    "x": 224,
+    "y": 32,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "17-ne-run-1.png",
+    "label": "NE 1",
+    "row": 3,
+    "column": 1,
+    "x": 0,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "18-n-run-1.png",
+    "label": "N 1",
+    "row": 3,
+    "column": 2,
+    "x": 32,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "19-scratch-wall-e-1.png",
+    "label": "scratchWallE 1",
+    "row": 3,
+    "column": 3,
+    "x": 64,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "20-tired.png",
+    "label": "tired",
+    "row": 3,
+    "column": 4,
+    "x": 96,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "21-w-run-1.png",
+    "label": "W 1",
+    "row": 3,
+    "column": 5,
+    "x": 128,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "22-se-run-2.png",
+    "label": "SE 2",
+    "row": 3,
+    "column": 6,
+    "x": 160,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "23-scratch-wall-s-2.png",
+    "label": "scratchWallS 2",
+    "row": 3,
+    "column": 7,
+    "x": 192,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "24-s-run-2.png",
+    "label": "S 2",
+    "row": 3,
+    "column": 8,
+    "x": 224,
+    "y": 64,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "25-ne-run-2.png",
+    "label": "NE 2",
+    "row": 4,
+    "column": 1,
+    "x": 0,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "26-n-run-2.png",
+    "label": "N 2",
+    "row": 4,
+    "column": 2,
+    "x": 32,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "27-scratch-wall-e-2.png",
+    "label": "scratchWallE 2",
+    "row": 4,
+    "column": 3,
+    "x": 64,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "28-idle.png",
+    "label": "idle",
+    "row": 4,
+    "column": 4,
+    "x": 96,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "29-w-run-2.png",
+    "label": "W 2",
+    "row": 4,
+    "column": 5,
+    "x": 128,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "30-sw-run-1.png",
+    "label": "SW 1",
+    "row": 4,
+    "column": 6,
+    "x": 160,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "31-s-run-1.png",
+    "label": "S 1",
+    "row": 4,
+    "column": 7,
+    "x": 192,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  },
+  {
+    "filename": "32-alert.png",
+    "label": "alert",
+    "row": 4,
+    "column": 8,
+    "x": 224,
+    "y": 96,
+    "width": 32,
+    "height": 32
+  }
+]

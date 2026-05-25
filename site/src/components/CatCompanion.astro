@@ -1,0 +1,83 @@
+---
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+
+const catPhotoDir = join(process.cwd(), 'public/images/wang-guagua');
+const catPhotos = existsSync(catPhotoDir)
+  ? readdirSync(catPhotoDir)
+      .filter((file) => /\.(avif|jpe?g|png|webp)$/i.test(file))
+      .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+      .map((file) => `/images/wang-guagua/${file}`)
+  : [];
+---
+
+<aside class="cat-companion" aria-labelledby="cat-companion-title">
+  <div
+    class:list={['cat-photo-frame', { 'is-empty': catPhotos.length === 0 }]}
+    data-cat-gallery
+    aria-label="王呱呱照片轮播"
+  >
+    {
+      catPhotos.length > 0 ? (
+        <>
+          <div class="cat-photo-stack">
+            {catPhotos.map((src, index) => (
+              <img
+                class:list={['cat-photo', { 'is-active': index === 0 }]}
+                src={src}
+                alt={index === 0 ? '王呱呱的照片' : ''}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                decoding="async"
+              />
+            ))}
+          </div>
+          {catPhotos.length > 1 && (
+            <div class="cat-photo-dots" aria-hidden="true">
+              {catPhotos.map((_, index) => (
+                <span class:list={['cat-photo-dot', { 'is-active': index === 0 }]} />
+              ))}
+            </div>
+          )}
+        </>
+      ) : (
+        <div class="cat-photo-empty">
+          <span>王呱呱照片待放入</span>
+          <code>public/images/wang-guagua/</code>
+        </div>
+      )
+    }
+  </div>
+  <div class="cat-copy">
+    <p class="cat-kicker">网站保安咪</p>
+    <h2 id="cat-companion-title">王呱呱</h2>
+    <p>欢迎来到我爸爸的网站，别在这里干坏事哦。</p>
+    <div class="cat-badges" aria-label="王呱呱标签">
+      <span>白色小猫</span>
+      <span>保安巡逻中</span>
+      <span>坏事禁止</span>
+    </div>
+  </div>
+</aside>
+
+<script>
+  document.querySelectorAll('[data-cat-gallery]').forEach((gallery) => {
+    const photos = Array.from(gallery.querySelectorAll('.cat-photo'));
+    const dots = Array.from(gallery.querySelectorAll('.cat-photo-dot'));
+
+    if (photos.length <= 1) {
+      return;
+    }
+
+    let activeIndex = 0;
+
+    window.setInterval(() => {
+      photos[activeIndex]?.classList.remove('is-active');
+      dots[activeIndex]?.classList.remove('is-active');
+
+      activeIndex = (activeIndex + 1) % photos.length;
+
+      photos[activeIndex]?.classList.add('is-active');
+      dots[activeIndex]?.classList.add('is-active');
+    }, 4200);
+  });
+</script>

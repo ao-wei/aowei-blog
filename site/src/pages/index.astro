@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import CatCompanion from '../components/CatCompanion.astro';
 import EntryCard from '../components/EntryCard.astro';
 
 const posts = (await getCollection('blog'))
@@ -19,14 +20,19 @@ const projects = (await getCollection('projects'))
   description="Personal notes, technical essays, and project links."
 >
   <section class="section hero">
-    <p class="eyebrow">Personal Blog</p>
-    <h1>记录学习、工程实践和一些有意思的项目。</h1>
-    <p class="lead">
-      这里会沉淀源码阅读、AI 工程、比赛复盘、工具构建，以及后续可以直接访问的项目入口。
-    </p>
-    <div class="actions">
-      <a class="button primary" href="/blog">阅读文章</a>
-      <a class="button" href="/projects">查看项目</a>
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">Personal Blog</p>
+        <h1>记录学习、工程实践和一些有意思的项目。</h1>
+        <p class="lead">
+          这里会沉淀源码阅读、AI 工程、比赛复盘、工具构建，以及后续可以直接访问的项目入口。
+        </p>
+        <div class="actions">
+          <a class="button primary" href="/blog">阅读文章</a>
+          <a class="button" href="/projects">查看项目</a>
+        </div>
+      </div>
+      <CatCompanion />
     </div>
   </section>
 
