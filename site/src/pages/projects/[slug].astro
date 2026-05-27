@@ -13,17 +13,23 @@ export async function getStaticPaths() {
 
 const { project } = Astro.props;
 const { Content } = await render(project);
+
+const statusLabelMap: Record<string, string> = {
+  active: '进行中',
+  paused: '暂停',
+  archived: '已归档',
+};
 ---
 
 <BaseLayout title={project.data.title} description={project.data.description}>
   <article class="prose">
     <header class="prose-header">
-      <p class="eyebrow">{project.data.status}</p>
+      <p class="eyebrow">{statusLabelMap[project.data.status] ?? project.data.status}</p>
       <h1>{project.data.title}</h1>
       <p class="prose-description">{project.data.description}</p>
       <div class="project-links">
         {project.data.repoUrl && <a class="button" href={project.data.repoUrl}>GitHub</a>}
-        {project.data.demoUrl && <a class="button primary" href={project.data.demoUrl}>Demo</a>}
+        {project.data.demoUrl && <a class="button primary" href={project.data.demoUrl}>演示</a>}
       </div>
       {
         project.data.tags.length > 0 && (

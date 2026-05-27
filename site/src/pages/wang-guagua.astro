@@ -1,0 +1,232 @@
+---
+import { existsSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const catPhotoDir = join(process.cwd(), 'public/images/wang-guagua');
+const catVideoDir = join(process.cwd(), 'public/images/wang-guagua/videos');
+const catPhotos = existsSync(catPhotoDir)
+  ? readdirSync(catPhotoDir)
+      .filter((file) => /\.(avif|jpe?g|png|webp)$/i.test(file))
+      .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+      .map((file) => `/images/wang-guagua/${file}`)
+  : [];
+const catVideos = existsSync(catVideoDir)
+  ? readdirSync(catVideoDir)
+      .filter((file) => /\.(mp4|mov|webm)$/i.test(file))
+      .sort((a, b) => a.localeCompare(b, 'zh-CN'))
+      .map((file) => `/images/wang-guagua/videos/${file}`)
+  : [];
+
+const heroPhoto = catPhotos[0];
+
+const profileItems = [
+  ['身份', '网站保安咪'],
+  ['毛色', '白色'],
+  ['工作内容', '巡逻、盯梢、禁止坏事'],
+  ['出没地点', '博客首页和每一个页面角落'],
+  ['第一次来爸爸家里', '2025年7月2号'],
+];
+---
+
+<BaseLayout title="王呱呱" description="王呱呱的照片、近况和网站保安记录。">
+  <section class="section guagua-hero">
+    <div class="guagua-hero-copy">
+      <p class="eyebrow">网站保安咪</p>
+      <h1>王呱呱</h1>
+      <p class="lead">
+        白色小猫，本站常驻保安咪。主要职责是在页面角落巡逻，顺便监督大家不要在这里干坏事。
+      </p>
+      <div class="cat-badges" aria-label="王呱呱标签">
+        <span>白色小猫</span>
+        <span>保安巡逻中</span>
+        <span>坏事禁止</span>
+      </div>
+    </div>
+    {
+      heroPhoto ? (
+        <img
+          class="guagua-hero-photo"
+          src={heroPhoto}
+          alt="王呱呱"
+          loading="eager"
+          decoding="async"
+        />
+      ) : (
+        <div class="guagua-hero-empty">王呱呱照片待放入</div>
+      )
+    }
+  </section>
+
+  <section class="section guagua-profile">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">基本档案</p>
+        <h2>基本信息</h2>
+      </div>
+    </div>
+    <div class="guagua-profile-grid">
+      {
+        profileItems.map(([label, value]) => (
+          <div class="guagua-profile-item">
+            <span>{label}</span>
+            <strong>{value}</strong>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">照片墙</p>
+        <h2>照片记录</h2>
+      </div>
+      <span class="guagua-count">{catPhotos.length} 张</span>
+    </div>
+    {
+      catPhotos.length > 0 ? (
+        <div class="guagua-carousel" data-guagua-carousel>
+          <div class="guagua-carousel-frame">
+            <div class="guagua-carousel-track">
+              {catPhotos.map((src, index) => (
+                <img
+                  class:list={['guagua-carousel-photo', { 'is-active': index === 0 }]}
+                  src={src}
+                  alt={`王呱呱照片 ${index + 1}`}
+                  loading={index < 2 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  aria-hidden={index === 0 ? 'false' : 'true'}
+                />
+              ))}
+            </div>
+            {
+              catPhotos.length > 1 && (
+                <>
+                  <button
+                    class="guagua-carousel-control is-prev"
+                    type="button"
+                    data-guagua-prev
+                    aria-label="上一张照片"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    class="guagua-carousel-control is-next"
+                    type="button"
+                    data-guagua-next
+                    aria-label="下一张照片"
+                  >
+                    ›
+                  </button>
+                </>
+              )
+            }
+          </div>
+          {catPhotos.length > 1 && (
+            <div class="guagua-carousel-dots" aria-label="选择照片">
+              {catPhotos.map((_, index) => (
+                <button
+                  class:list={['guagua-carousel-dot', { 'is-active': index === 0 }]}
+                  type="button"
+                  data-guagua-dot
+                  data-index={index}
+                  aria-label={`切换到第 ${index + 1} 张照片`}
+                  aria-current={index === 0 ? 'true' : 'false'}
+                >
+                  <span>{String(index + 1).padStart(2, '0')}</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : (
+        <p class="empty-state">还没有放入王呱呱照片。</p>
+      )
+    }
+  </section>
+
+  <script>
+    document.querySelectorAll('[data-guagua-carousel]').forEach((carousel) => {
+      const photos = Array.from(carousel.querySelectorAll('.guagua-carousel-photo'));
+      const dots = Array.from(carousel.querySelectorAll('.guagua-carousel-dot'));
+      const previousButton = carousel.querySelector('[data-guagua-prev]');
+      const nextButton = carousel.querySelector('[data-guagua-next]');
+
+      if (photos.length <= 1) {
+        return;
+      }
+
+      let activeIndex = 0;
+      let timerId;
+
+      const setActive = (nextIndex) => {
+        photos[activeIndex]?.classList.remove('is-active');
+        photos[activeIndex]?.setAttribute('aria-hidden', 'true');
+        dots[activeIndex]?.classList.remove('is-active');
+        dots[activeIndex]?.setAttribute('aria-current', 'false');
+
+        activeIndex = (nextIndex + photos.length) % photos.length;
+
+        photos[activeIndex]?.classList.add('is-active');
+        photos[activeIndex]?.setAttribute('aria-hidden', 'false');
+        dots[activeIndex]?.classList.add('is-active');
+        dots[activeIndex]?.setAttribute('aria-current', 'true');
+      };
+
+      const playNext = () => setActive(activeIndex + 1);
+      const restartTimer = () => {
+        if (timerId !== undefined) {
+          window.clearInterval(timerId);
+        }
+        timerId = window.setInterval(playNext, 4600);
+      };
+
+      previousButton?.addEventListener('click', () => {
+        setActive(activeIndex - 1);
+        restartTimer();
+      });
+      nextButton?.addEventListener('click', () => {
+        setActive(activeIndex + 1);
+        restartTimer();
+      });
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          setActive(index);
+          restartTimer();
+        });
+      });
+
+      restartTimer();
+    });
+  </script>
+
+  <section class="section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">近况记录</p>
+        <h2>近况与影像</h2>
+      </div>
+    </div>
+    {
+      catVideos.length > 0 ? (
+        <div class="guagua-video-grid">
+          {catVideos.map((src, index) => (
+            <video
+              class="guagua-video"
+              src={src}
+              controls
+              preload="metadata"
+              aria-label={`王呱呱视频 ${index + 1}`}
+            />
+          ))}
+        </div>
+      ) : (
+        <div class="guagua-media-panel">
+          <p>后续的新照片、视频和王呱呱近况会放在这里。</p>
+        </div>
+      )
+    }
+  </section>
+</BaseLayout>

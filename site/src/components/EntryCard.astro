@@ -10,6 +10,12 @@ interface Props {
 
 const { href, title, description, date, status, tags = [] } = Astro.props;
 
+const statusLabelMap: Record<string, string> = {
+  active: '进行中',
+  paused: '暂停',
+  archived: '已归档',
+};
+
 const formattedDate = date
   ? new Intl.DateTimeFormat('zh-CN', {
       year: 'numeric',
@@ -22,7 +28,7 @@ const formattedDate = date
 <a class="entry-card" href={href}>
   <div class="entry-meta">
     {formattedDate && <span>{formattedDate}</span>}
-    {status && <span>{status}</span>}
+    {status && <span>{statusLabelMap[status] ?? status}</span>}
   </div>
   <h3>{title}</h3>
   <p>{description}</p>

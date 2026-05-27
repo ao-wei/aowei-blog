@@ -8,11 +8,11 @@ interface Props {
 }
 
 const {
-  title = 'Aowei Blog',
-  description = 'Personal notes, technical essays, and project links.',
+  title = '敖炜的博客',
+  description = '个人文章、项目入口和长期记录。',
 } = Astro.props;
 
-const pageTitle = title === 'Aowei Blog' ? title : `${title} | Aowei Blog`;
+const pageTitle = title === '敖炜的博客' ? title : `${title} | Aowei 博客`;
 ---
 
 <!doctype html>
@@ -27,15 +27,16 @@ const pageTitle = title === 'Aowei Blog' ? title : `${title} | Aowei Blog`;
   <body>
     <div class="site-shell">
       <header class="site-header">
-        <nav class="nav" aria-label="Primary navigation">
+        <nav class="nav" aria-label="主导航">
           <a class="brand" href="/">
             <span class="brand-mark" aria-hidden="true">A</span>
-            <span>Aowei Blog</span>
+            <span>敖炜的博客</span>
           </a>
           <div class="nav-links">
-            <a href="/blog">Blog</a>
-            <a href="/projects">Projects</a>
-            <a href="/about">About</a>
+            <a href="/profile">关于我</a>
+            <a href="/blog">文章</a>
+            <a href="/projects">项目</a>
+            <a href="/about">关于网站</a>
           </div>
         </nav>
       </header>
@@ -46,7 +47,7 @@ const pageTitle = title === 'Aowei Blog' ? title : `${title} | Aowei Blog`;
       <footer class="site-footer">
         <div class="footer-inner">
           <span>© {new Date().getFullYear()} Aowei</span>
-          <span>Built with Astro and Markdown.</span>
+          <span>使用 Astro 和 Markdown 构建。</span>
         </div>
       </footer>
     </div>

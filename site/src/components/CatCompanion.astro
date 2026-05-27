@@ -11,7 +11,7 @@ const catPhotos = existsSync(catPhotoDir)
   : [];
 ---
 
-<aside class="cat-companion" aria-labelledby="cat-companion-title">
+<a class="cat-companion cat-companion-link" href="/wang-guagua" aria-labelledby="cat-companion-title">
   <div
     class:list={['cat-photo-frame', { 'is-empty': catPhotos.length === 0 }]}
     data-cat-gallery
@@ -57,7 +57,7 @@ const catPhotos = existsSync(catPhotoDir)
       <span>坏事禁止</span>
     </div>
   </div>
-</aside>
+</a>
 
 <script>
   document.querySelectorAll('[data-cat-gallery]').forEach((gallery) => {

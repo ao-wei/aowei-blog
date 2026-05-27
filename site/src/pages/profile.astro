@@ -1,0 +1,183 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const summaryItems = [
+  ['内容范围', '教育经历、奖项荣誉、技能栈、项目经历']
+];
+
+const educationItems = [
+  {
+    period: '2021.9-2025.6',
+    school: '四川大学',
+    degree: '本科 / 计算生物学双学士学位',
+    details: ['主修课程待补充', '绩点 / 排名 / 研究方向待补充'],
+  },
+  {
+    period: '2025.9-',
+    school: '电子科技大学',
+    degree: '硕士研究生 / 计算机科学与技术',
+    details: ['主修课程待补充', '绩点 / 排名 / 研究方向待补充'],
+  },
+];
+
+const awardItems = [
+  {
+    title: '待补充奖项名称',
+    meta: '待补充颁发单位 / 获奖时间',
+    description: '记录奖项级别、排名、负责内容，以及可量化结果。',
+  },
+];
+
+const skillGroups = [
+  {
+    title: '精通',
+    description: '能够独立设计方案、排查问题，并沉淀可复用方法。',
+    items: ['待补充核心技术'],
+  },
+  {
+    title: '熟悉',
+    description: '能够在项目中稳定使用，并理解主要工程取舍。',
+    items: ['待补充常用技术'],
+  },
+  {
+    title: '了解',
+    description: '具备基本概念和实践经验，可继续深入。',
+    items: ['待补充扩展技术'],
+  },
+];
+
+const projectItems = [
+  {
+    title: '个人博客网站',
+    role: '独立开发',
+    stack: ['Astro', 'Markdown', 'Cloudflare Pages'],
+    description:
+      '搭建个人博客与项目入口，用于承载长期写作、项目展示和后续个人主页内容。',
+    highlights: ['静态构建，内容可用 Markdown 维护', '包含文章、项目、王呱呱详情等页面模块'],
+  },
+  {
+    title: '待补充项目名称',
+    role: '待补充角色',
+    stack: ['待补充技术栈'],
+    description: '记录项目背景、个人职责、技术方案和最终结果。',
+    highlights: ['待补充关键成果', '待补充可量化指标'],
+  },
+];
+---
+
+<BaseLayout title="关于我" description="用于整理教育经历、奖项荣誉、技能栈和项目经历的个人情况页面。">
+  <section class="section resume-hero">
+    <div>
+      <p class="eyebrow">个人情况</p>
+      <h1>简历素材</h1>
+      <p class="lead">
+        集中维护之后求职时需要反复整理的信息，包括教育经历、所获奖项、掌握技能和项目经历。
+      </p>
+    </div>
+  </section>
+
+  <section class="section resume-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">教育背景</p>
+        <h2>教育经历</h2>
+      </div>
+    </div>
+    <div class="resume-timeline">
+      {
+        educationItems.map((item) => (
+          <article class="resume-timeline-item">
+            <span class="resume-period">{item.period}</span>
+            <div>
+              <h3>{item.school}</h3>
+              <p>{item.degree}</p>
+              <ul>
+                {item.details.map((detail) => (
+                  <li>{detail}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section resume-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">荣誉记录</p>
+        <h2>所获奖项</h2>
+      </div>
+    </div>
+    <div class="resume-card-grid">
+      {
+        awardItems.map((award) => (
+          <article class="resume-card">
+            <span class="resume-card-meta">{award.meta}</span>
+            <h3>{award.title}</h3>
+            <p>{award.description}</p>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section resume-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">能力结构</p>
+        <h2>掌握技能</h2>
+      </div>
+    </div>
+    <div class="resume-skill-grid">
+      {
+        skillGroups.map((group) => (
+          <article class="resume-skill-card">
+            <h3>{group.title}</h3>
+            <p>{group.description}</p>
+            <div class="tags">
+              {group.items.map((item) => (
+                <span class="tag">{item}</span>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section resume-section">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">项目材料</p>
+        <h2>项目经历</h2>
+      </div>
+    </div>
+    <div class="resume-project-list">
+      {
+        projectItems.map((project) => (
+          <article class="resume-project">
+            <div class="resume-project-head">
+              <div>
+                <span class="resume-card-meta">{project.role}</span>
+                <h3>{project.title}</h3>
+              </div>
+              <div class="tags">
+                {project.stack.map((item) => (
+                  <span class="tag">{item}</span>
+                ))}
+              </div>
+            </div>
+            <p>{project.description}</p>
+            <ul>
+              {project.highlights.map((highlight) => (
+                <li>{highlight}</li>
+              ))}
+            </ul>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</BaseLayout>
