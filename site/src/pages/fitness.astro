@@ -1,0 +1,1072 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="锻炼记录" description="私人锻炼记录、统计和导入导出工具。">
+  <section class="section fitness-hero">
+    <div>
+      <p class="eyebrow">私人记录</p>
+      <h1>锻炼记录</h1>
+      <p class="lead">
+        在浏览器里记录跑步和徒手训练，按周、月、年查看总量；没有录入的日期默认按 0 处理。
+      </p>
+    </div>
+    <div class="fitness-privacy-panel" aria-label="隐私说明">
+      <strong>本地保存</strong>
+      <p>记录默认只存在当前浏览器。导出的 JSON 或 CSV 可用于备份，不会自动写入仓库或云端。</p>
+    </div>
+  </section>
+
+  <section class="section fitness-workspace" data-fitness-app>
+    <div class="fitness-period-bar" aria-label="统计周期">
+      <div class="fitness-period-tabs" role="tablist" aria-label="选择统计周期">
+        <button class="is-active" type="button" data-period="week" aria-pressed="true">本周</button>
+        <button type="button" data-period="month" aria-pressed="false">本月</button>
+        <button type="button" data-period="year" aria-pressed="false">今年</button>
+      </div>
+      <span data-period-label>正在读取本地记录</span>
+    </div>
+
+    <div class="fitness-stat-grid" aria-label="统计摘要">
+      <article class="fitness-stat">
+        <span>跑步总量</span>
+        <strong data-stat-running>0 km</strong>
+      </article>
+      <article class="fitness-stat">
+        <span>徒手动作次数</span>
+        <strong data-stat-reps>0 次</strong>
+      </article>
+      <article class="fitness-stat">
+        <span>训练天数</span>
+        <strong data-stat-days>0 天</strong>
+      </article>
+      <article class="fitness-stat">
+        <span>累计最多</span>
+        <strong data-stat-best>暂无</strong>
+      </article>
+    </div>
+
+    <div class="fitness-dashboard">
+      <article class="fitness-panel">
+        <div class="fitness-panel-head">
+          <div>
+            <p class="eyebrow">输入</p>
+            <h2>添加或编辑记录</h2>
+          </div>
+        </div>
+
+        <form class="fitness-form" data-record-form>
+          <label class="fitness-field">
+            <span>日期</span>
+            <input type="date" name="date" data-date-input required />
+          </label>
+
+          <div class="fitness-fieldset">
+            <div class="fitness-fieldset-head">
+              <span>项目</span>
+              <small>空白项目按 0 处理</small>
+            </div>
+            <div class="fitness-activity-inputs" data-activity-inputs></div>
+          </div>
+
+          <label class="fitness-field">
+            <span>备注</span>
+            <textarea
+              name="note"
+              rows="3"
+              data-note-input
+              placeholder="可选：状态、组数、路线或其他说明"
+            ></textarea>
+          </label>
+
+          <div class="fitness-actions">
+            <button class="button primary" type="submit">保存记录</button>
+            <button class="button" type="button" data-delete-record>删除当天</button>
+          </div>
+        </form>
+
+        <p class="fitness-status" data-status role="status" aria-live="polite"></p>
+      </article>
+
+      <article class="fitness-panel">
+        <div class="fitness-panel-head">
+          <div>
+            <p class="eyebrow">项目</p>
+            <h2>动作管理</h2>
+          </div>
+        </div>
+
+        <form class="fitness-custom-form" data-activity-form>
+          <label class="fitness-field">
+            <span>动作名称</span>
+            <input name="name" type="text" autocomplete="off" placeholder="例如：卷腹" required />
+          </label>
+          <label class="fitness-field">
+            <span>单位</span>
+            <input name="unit" type="text" autocomplete="off" value="次" required />
+          </label>
+          <button class="button" type="submit">新增动作</button>
+        </form>
+
+        <div class="fitness-activity-list" data-activity-list aria-label="已启用项目"></div>
+      </article>
+    </div>
+
+    <div class="fitness-dashboard fitness-dashboard-wide">
+      <article class="fitness-panel">
+        <div class="fitness-panel-head">
+          <div>
+            <p class="eyebrow">日历</p>
+            <h2>本月记录</h2>
+          </div>
+          <span class="fitness-chip" data-calendar-month></span>
+        </div>
+        <div class="fitness-calendar">
+          <div class="fitness-calendar-weekdays" aria-hidden="true">
+            <span>一</span>
+            <span>二</span>
+            <span>三</span>
+            <span>四</span>
+            <span>五</span>
+            <span>六</span>
+            <span>日</span>
+          </div>
+          <div class="fitness-calendar-grid" data-calendar-grid></div>
+        </div>
+      </article>
+
+      <article class="fitness-panel">
+        <div class="fitness-panel-head">
+          <div>
+            <p class="eyebrow">趋势</p>
+            <h2>训练量趋势</h2>
+          </div>
+        </div>
+        <div class="fitness-chart-wrap">
+          <svg
+            class="fitness-chart"
+            viewBox="0 0 640 190"
+            role="img"
+            aria-label="当前周期训练趋势图"
+            data-trend-chart
+          ></svg>
+          <p class="fitness-chart-empty" data-chart-empty>暂无趋势数据</p>
+        </div>
+        <div class="fitness-total-list" data-activity-totals></div>
+      </article>
+    </div>
+
+    <div class="fitness-dashboard">
+      <article class="fitness-panel">
+        <div class="fitness-panel-head">
+          <div>
+            <p class="eyebrow">备份</p>
+            <h2>导入与导出</h2>
+          </div>
+        </div>
+        <div class="fitness-file-actions">
+          <button class="button" type="button" data-export-json>导出 JSON</button>
+          <button class="button" type="button" data-export-csv>导出 CSV</button>
+          <label class="button fitness-file-button">
+            导入 JSON
+            <input type="file" accept="application/json,.json" data-import-json />
+          </label>
+          <button class="button" type="button" data-clear-local>清空本地</button>
+        </div>
+        <p class="fitness-help">
+          JSON 会保留动作配置和每日记录；CSV 更适合表格查看。导入 JSON 会替换当前浏览器里的本地数据。
+        </p>
+      </article>
+
+      <article class="fitness-panel">
+        <div class="fitness-panel-head">
+          <div>
+            <p class="eyebrow">最近</p>
+            <h2>最近记录</h2>
+          </div>
+        </div>
+        <div class="fitness-recent-list" data-recent-list></div>
+      </article>
+    </div>
+  </section>
+
+  <noscript>
+    <section class="section">
+      <p class="empty-state">锻炼记录页需要启用 JavaScript 才能读取本地记录和生成统计。</p>
+    </section>
+  </noscript>
+
+  <script>
+    const STORAGE_KEY = 'aowei-fitness-v1';
+    const DEFAULT_ACTIVITIES = [
+      { id: 'running', name: '跑步', unit: 'km', kind: 'distance' },
+      { id: 'pushups', name: '俯卧撑', unit: '次', kind: 'reps' },
+      { id: 'squats', name: '深蹲', unit: '次', kind: 'reps' },
+      { id: 'pullups', name: '引体向上', unit: '次', kind: 'reps' },
+      { id: 'plank', name: '平板支撑', unit: '秒', kind: 'time' },
+    ];
+    const DEFAULT_ACTIVITY_IDS = new Set(DEFAULT_ACTIVITIES.map((activity) => activity.id));
+
+    const app = document.querySelector('[data-fitness-app]');
+
+    if (app) {
+      const nodes = {
+        periodButtons: Array.from(app.querySelectorAll('[data-period]')),
+        periodLabel: app.querySelector('[data-period-label]'),
+        statRunning: app.querySelector('[data-stat-running]'),
+        statReps: app.querySelector('[data-stat-reps]'),
+        statDays: app.querySelector('[data-stat-days]'),
+        statBest: app.querySelector('[data-stat-best]'),
+        recordForm: app.querySelector('[data-record-form]'),
+        dateInput: app.querySelector('[data-date-input]'),
+        noteInput: app.querySelector('[data-note-input]'),
+        activityInputs: app.querySelector('[data-activity-inputs]'),
+        deleteRecordButton: app.querySelector('[data-delete-record]'),
+        activityForm: app.querySelector('[data-activity-form]'),
+        activityList: app.querySelector('[data-activity-list]'),
+        calendarMonth: app.querySelector('[data-calendar-month]'),
+        calendarGrid: app.querySelector('[data-calendar-grid]'),
+        trendChart: app.querySelector('[data-trend-chart]'),
+        chartEmpty: app.querySelector('[data-chart-empty]'),
+        activityTotals: app.querySelector('[data-activity-totals]'),
+        exportJson: app.querySelector('[data-export-json]'),
+        exportCsv: app.querySelector('[data-export-csv]'),
+        importJson: app.querySelector('[data-import-json]'),
+        clearLocal: app.querySelector('[data-clear-local]'),
+        recentList: app.querySelector('[data-recent-list]'),
+        status: app.querySelector('[data-status]'),
+      };
+
+      let state = loadState();
+      let activePeriod = 'week';
+
+      nodes.dateInput.value = todayKey();
+      renderAll();
+      loadFormForDate(nodes.dateInput.value);
+
+      nodes.periodButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activePeriod = button.dataset.period || 'week';
+          nodes.periodButtons.forEach((item) => {
+            const isActive = item === button;
+            item.classList.toggle('is-active', isActive);
+            item.setAttribute('aria-pressed', String(isActive));
+          });
+          renderStats();
+          renderTrend();
+        });
+      });
+
+      nodes.recordForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        saveCurrentRecord();
+      });
+
+      nodes.dateInput.addEventListener('change', () => {
+        loadFormForDate(nodes.dateInput.value);
+      });
+
+      nodes.deleteRecordButton.addEventListener('click', () => {
+        deleteRecord(nodes.dateInput.value);
+      });
+
+      nodes.activityForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        addCustomActivity(new FormData(nodes.activityForm));
+      });
+
+      nodes.activityList.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) {
+          return;
+        }
+        const button = event.target.closest('[data-remove-activity]');
+        if (button) {
+          removeActivity(button.dataset.removeActivity);
+        }
+      });
+
+      nodes.calendarGrid.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) {
+          return;
+        }
+        const button = event.target.closest('[data-date]');
+        if (!button) {
+          return;
+        }
+        nodes.dateInput.value = button.dataset.date;
+        loadFormForDate(button.dataset.date);
+        nodes.dateInput.focus();
+      });
+
+      nodes.recentList.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element)) {
+          return;
+        }
+        const button = event.target.closest('[data-recent-date]');
+        if (!button) {
+          return;
+        }
+        nodes.dateInput.value = button.dataset.recentDate;
+        loadFormForDate(button.dataset.recentDate);
+        nodes.dateInput.focus();
+      });
+
+      nodes.exportJson.addEventListener('click', () => {
+        downloadFile(
+          `fitness-records-${todayKey()}.json`,
+          'application/json',
+          JSON.stringify(state, null, 2),
+        );
+        setStatus('已导出 JSON 备份。');
+      });
+
+      nodes.exportCsv.addEventListener('click', () => {
+        downloadFile(
+          `fitness-records-${todayKey()}.csv`,
+          'text/csv;charset=utf-8',
+          buildCsv(),
+        );
+        setStatus('已导出 CSV 文件。');
+      });
+
+      nodes.importJson.addEventListener('change', async () => {
+        const file = nodes.importJson.files?.[0];
+        if (!file) {
+          return;
+        }
+        try {
+          const imported = JSON.parse(await file.text());
+          state = normalizeState(imported);
+          const persisted = persistState();
+          renderAll();
+          loadFormForDate(nodes.dateInput.value);
+          if (persisted) {
+            setStatus(`已导入 ${state.records.length} 条记录。`);
+          }
+        } catch (error) {
+          setStatus('导入失败：JSON 文件格式不正确。');
+        } finally {
+          nodes.importJson.value = '';
+        }
+      });
+
+      nodes.clearLocal.addEventListener('click', () => {
+        const confirmed = window.confirm('确定清空当前浏览器里的锻炼记录吗？导出的备份不会受影响。');
+        if (!confirmed) {
+          return;
+        }
+        state = createDefaultState();
+        const persisted = persistState();
+        renderAll();
+        loadFormForDate(nodes.dateInput.value);
+        if (persisted) {
+          setStatus('已清空当前浏览器里的本地记录。');
+        }
+      });
+
+      function createDefaultState() {
+        return {
+          version: 1,
+          activities: DEFAULT_ACTIVITIES.map((activity) => ({ ...activity })),
+          records: [],
+        };
+      }
+
+      function loadState() {
+        try {
+          const saved = window.localStorage.getItem(STORAGE_KEY);
+          return saved ? normalizeState(JSON.parse(saved)) : createDefaultState();
+        } catch (error) {
+          setStatus('无法读取本地记录，当前会话将临时使用空数据。');
+          return createDefaultState();
+        }
+      }
+
+      function persistState() {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          return true;
+        } catch (error) {
+          setStatus('无法写入本地存储，请检查浏览器隐私设置或存储空间。');
+          return false;
+        }
+      }
+
+      function normalizeState(input) {
+        const base = createDefaultState();
+        const activityMap = new Map(base.activities.map((activity) => [activity.id, activity]));
+
+        if (Array.isArray(input?.activities)) {
+          input.activities.forEach((activity) => {
+            if (!activity?.id || !activity?.name || !activity?.unit || activityMap.has(activity.id)) {
+              return;
+            }
+            activityMap.set(activity.id, {
+              id: String(activity.id),
+              name: String(activity.name).trim(),
+              unit: String(activity.unit).trim(),
+              kind: normalizeKind(activity.kind, activity.unit),
+            });
+          });
+        }
+
+        const validActivityIds = new Set(activityMap.keys());
+        const records = Array.isArray(input?.records)
+          ? input.records
+              .map((record) => normalizeRecord(record, validActivityIds))
+              .filter(Boolean)
+          : [];
+
+        return {
+          version: 1,
+          activities: Array.from(activityMap.values()),
+          records: sortRecords(dedupeRecords(records)),
+        };
+      }
+
+      function normalizeRecord(record, validActivityIds) {
+        if (!record?.date || !isDateKey(record.date)) {
+          return null;
+        }
+
+        const values = {};
+        Object.entries(record.values || {}).forEach(([id, rawValue]) => {
+          if (!validActivityIds.has(id)) {
+            return;
+          }
+          const value = sanitizeNumber(rawValue);
+          if (value > 0) {
+            values[id] = value;
+          }
+        });
+
+        const note = String(record.note || '').trim();
+        if (Object.keys(values).length === 0 && !note) {
+          return null;
+        }
+
+        return note ? { date: record.date, values, note } : { date: record.date, values };
+      }
+
+      function dedupeRecords(records) {
+        const map = new Map();
+        records.forEach((record) => map.set(record.date, record));
+        return Array.from(map.values());
+      }
+
+      function renderAll() {
+        renderActivityInputs();
+        renderActivityList();
+        renderStats();
+        renderCalendar();
+        renderTrend();
+        renderRecentRecords();
+      }
+
+      function renderActivityInputs() {
+        nodes.activityInputs.textContent = '';
+        state.activities.forEach((activity) => {
+          const label = document.createElement('label');
+          label.className = 'fitness-activity-field';
+          label.htmlFor = `fitness-${activity.id}`;
+
+          const labelText = document.createElement('span');
+          const name = document.createElement('strong');
+          name.textContent = activity.name;
+          const unit = document.createElement('small');
+          unit.textContent = activity.unit;
+          labelText.append(name, unit);
+
+          const input = document.createElement('input');
+          input.id = `fitness-${activity.id}`;
+          input.type = 'number';
+          input.min = '0';
+          input.step = activity.kind === 'distance' ? '0.01' : '1';
+          input.inputMode = 'decimal';
+          input.dataset.activityId = activity.id;
+          input.placeholder = '0';
+
+          label.append(labelText, input);
+          nodes.activityInputs.append(label);
+        });
+      }
+
+      function renderActivityList() {
+        nodes.activityList.textContent = '';
+        state.activities.forEach((activity) => {
+          const row = document.createElement('div');
+          row.className = 'fitness-activity-row';
+
+          const copy = document.createElement('div');
+          const name = document.createElement('strong');
+          name.textContent = activity.name;
+          const meta = document.createElement('span');
+          meta.textContent = `${activity.unit} · ${activityKindLabel(activity.kind)}`;
+          copy.append(name, meta);
+
+          const action = document.createElement('button');
+          action.type = 'button';
+          action.className = 'fitness-row-action';
+          if (DEFAULT_ACTIVITY_IDS.has(activity.id)) {
+            action.textContent = '预设';
+            action.disabled = true;
+          } else {
+            action.textContent = '移除';
+            action.dataset.removeActivity = activity.id;
+          }
+
+          row.append(copy, action);
+          nodes.activityList.append(row);
+        });
+      }
+
+      function renderStats() {
+        const range = getPeriodRange(activePeriod);
+        const records = recordsInRange(range.start, range.end);
+        const totals = getTotals(records);
+        const runningTotal = totals.get('running') || 0;
+        const repsTotal = state.activities
+          .filter((activity) => activity.kind === 'reps')
+          .reduce((sum, activity) => sum + (totals.get(activity.id) || 0), 0);
+        const trainingDays = records.filter(recordHasValues).length;
+        const best = getBestActivity(totals);
+
+        nodes.periodLabel.textContent = range.label;
+        nodes.statRunning.textContent = `${formatNumber(runningTotal)} km`;
+        nodes.statReps.textContent = `${formatNumber(repsTotal)} 次`;
+        nodes.statDays.textContent = `${trainingDays} 天`;
+        nodes.statBest.textContent = best
+          ? `${best.activity.name} ${formatNumber(best.total)} ${best.activity.unit}`
+          : '暂无';
+
+        renderActivityTotals(totals);
+      }
+
+      function renderActivityTotals(totals) {
+        nodes.activityTotals.textContent = '';
+        state.activities.forEach((activity) => {
+          const row = document.createElement('div');
+          row.className = 'fitness-total-row';
+          const name = document.createElement('span');
+          name.textContent = activity.name;
+          const value = document.createElement('strong');
+          value.textContent = `${formatNumber(totals.get(activity.id) || 0)} ${activity.unit}`;
+          row.append(name, value);
+          nodes.activityTotals.append(row);
+        });
+      }
+
+      function renderCalendar() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = now.getMonth();
+        const firstDay = new Date(year, month, 1);
+        const lastDay = new Date(year, month + 1, 0);
+        const monthDays = lastDay.getDate();
+        const leadingBlanks = (firstDay.getDay() + 6) % 7;
+        const monthRecords = new Map(
+          state.records
+            .filter((record) => {
+              const date = parseDateKey(record.date);
+              return date.getFullYear() === year && date.getMonth() === month;
+            })
+            .map((record) => [record.date, record]),
+        );
+        const monthTotals = Array.from({ length: monthDays }, (_, index) => {
+          const key = dateKeyFromDate(new Date(year, month, index + 1));
+          return recordTotal(monthRecords.get(key));
+        });
+        const maxTotal = Math.max(0, ...monthTotals);
+
+        nodes.calendarMonth.textContent = `${year} 年 ${month + 1} 月`;
+        nodes.calendarGrid.textContent = '';
+
+        for (let index = 0; index < leadingBlanks; index += 1) {
+          const blank = document.createElement('span');
+          blank.className = 'fitness-calendar-blank';
+          nodes.calendarGrid.append(blank);
+        }
+
+        for (let day = 1; day <= monthDays; day += 1) {
+          const key = dateKeyFromDate(new Date(year, month, day));
+          const record = monthRecords.get(key);
+          const total = recordTotal(record);
+          const intensity = getIntensity(total, maxTotal);
+          const cell = document.createElement('button');
+          cell.type = 'button';
+          cell.className = `fitness-calendar-day level-${intensity}`;
+          cell.dataset.date = key;
+          cell.title = `${key}：${formatNumber(total)}`;
+          if (key === todayKey()) {
+            cell.classList.add('is-today');
+          }
+          if (record) {
+            cell.classList.add('has-record');
+          }
+
+          const dayLabel = document.createElement('strong');
+          dayLabel.textContent = String(day);
+          const value = document.createElement('span');
+          value.textContent = total > 0 ? formatNumber(total) : '0';
+          cell.append(dayLabel, value);
+          nodes.calendarGrid.append(cell);
+        }
+      }
+
+      function renderTrend() {
+        const series = buildTrendSeries(activePeriod);
+        const maxValue = Math.max(0, ...series.map((item) => item.value));
+        const hasData = maxValue > 0;
+        const svg = nodes.trendChart;
+        const namespace = 'http://www.w3.org/2000/svg';
+        const width = 640;
+        const height = 190;
+        const padding = { top: 18, right: 24, bottom: 34, left: 34 };
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+
+        svg.textContent = '';
+        nodes.chartEmpty.hidden = hasData;
+
+        for (let index = 0; index < 4; index += 1) {
+          const y = padding.top + (chartHeight / 3) * index;
+          const line = document.createElementNS(namespace, 'line');
+          line.setAttribute('x1', String(padding.left));
+          line.setAttribute('x2', String(width - padding.right));
+          line.setAttribute('y1', String(y));
+          line.setAttribute('y2', String(y));
+          line.setAttribute('class', 'fitness-chart-grid');
+          svg.append(line);
+        }
+
+        if (series.length === 0) {
+          return;
+        }
+
+        const points = series.map((item, index) => {
+          const x = padding.left + (chartWidth * index) / Math.max(series.length - 1, 1);
+          const y = hasData
+            ? padding.top + chartHeight - (item.value / maxValue) * chartHeight
+            : padding.top + chartHeight;
+          return { ...item, x, y };
+        });
+
+        const polyline = document.createElementNS(namespace, 'polyline');
+        polyline.setAttribute('points', points.map((point) => `${point.x},${point.y}`).join(' '));
+        polyline.setAttribute('class', 'fitness-chart-line');
+        svg.append(polyline);
+
+        points.forEach((point, index) => {
+          if (series.length > 35 && index % 3 !== 0) {
+            return;
+          }
+          const circle = document.createElementNS(namespace, 'circle');
+          circle.setAttribute('cx', String(point.x));
+          circle.setAttribute('cy', String(point.y));
+          circle.setAttribute('r', point.value > 0 ? '4' : '3');
+          circle.setAttribute('class', point.value > 0 ? 'fitness-chart-dot' : 'fitness-chart-dot is-empty');
+          const title = document.createElementNS(namespace, 'title');
+          title.textContent = `${point.label}: ${formatNumber(point.value)}`;
+          circle.append(title);
+          svg.append(circle);
+        });
+
+        getChartLabels(points).forEach((point) => {
+          const text = document.createElementNS(namespace, 'text');
+          text.setAttribute('x', String(point.x));
+          text.setAttribute('y', String(height - 8));
+          text.setAttribute('text-anchor', 'middle');
+          text.setAttribute('class', 'fitness-chart-label');
+          text.textContent = point.shortLabel;
+          svg.append(text);
+        });
+      }
+
+      function renderRecentRecords() {
+        nodes.recentList.textContent = '';
+        if (state.records.length === 0) {
+          const empty = document.createElement('p');
+          empty.className = 'fitness-help';
+          empty.textContent = '还没有记录。保存一次训练后，这里会显示最近记录。';
+          nodes.recentList.append(empty);
+          return;
+        }
+
+        state.records.slice(0, 8).forEach((record) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'fitness-recent-row';
+          button.dataset.recentDate = record.date;
+
+          const date = document.createElement('strong');
+          date.textContent = record.date;
+          const summary = document.createElement('span');
+          summary.textContent = formatRecordSummary(record);
+          button.append(date, summary);
+          nodes.recentList.append(button);
+        });
+      }
+
+      function saveCurrentRecord() {
+        const date = nodes.dateInput.value;
+        if (!isDateKey(date)) {
+          setStatus('请选择有效日期。');
+          return;
+        }
+
+        const values = {};
+        nodes.activityInputs.querySelectorAll('[data-activity-id]').forEach((input) => {
+          const value = sanitizeNumber(input.value);
+          if (value > 0) {
+            values[input.dataset.activityId] = value;
+          }
+        });
+
+        const note = nodes.noteInput.value.trim();
+        const existingIndex = state.records.findIndex((record) => record.date === date);
+
+        if (Object.keys(values).length === 0 && !note) {
+          if (existingIndex >= 0) {
+            state.records.splice(existingIndex, 1);
+            const persisted = persistState();
+            renderAll();
+            loadFormForDate(date);
+            if (persisted) {
+              setStatus(`${date} 没有有效输入，已删除当天记录。`);
+            }
+            return;
+          }
+          setStatus('没有输入有效数值，未新增空记录。');
+          return;
+        }
+
+        const nextRecord = note ? { date, values, note } : { date, values };
+        if (existingIndex >= 0) {
+          state.records[existingIndex] = nextRecord;
+        } else {
+          state.records.push(nextRecord);
+        }
+        state.records = sortRecords(state.records);
+        const persisted = persistState();
+        renderAll();
+        loadFormForDate(date);
+        if (persisted) {
+          setStatus(`已保存 ${date} 的记录。`);
+        }
+      }
+
+      function loadFormForDate(date) {
+        const record = state.records.find((item) => item.date === date);
+        nodes.activityInputs.querySelectorAll('[data-activity-id]').forEach((input) => {
+          const value = record?.values?.[input.dataset.activityId];
+          input.value = value ? String(value) : '';
+        });
+        nodes.noteInput.value = record?.note || '';
+      }
+
+      function deleteRecord(date) {
+        const existingIndex = state.records.findIndex((record) => record.date === date);
+        if (existingIndex < 0) {
+          setStatus('当天还没有记录。');
+          return;
+        }
+        state.records.splice(existingIndex, 1);
+        const persisted = persistState();
+        renderAll();
+        loadFormForDate(date);
+        if (persisted) {
+          setStatus(`已删除 ${date} 的记录。`);
+        }
+      }
+
+      function addCustomActivity(formData) {
+        const name = String(formData.get('name') || '').trim();
+        const unit = String(formData.get('unit') || '').trim();
+        if (!name || !unit) {
+          setStatus('请输入动作名称和单位。');
+          return;
+        }
+        const duplicated = state.activities.some((activity) => activity.name === name);
+        if (duplicated) {
+          setStatus('这个动作已经存在。');
+          return;
+        }
+
+        state.activities.push({
+          id: `custom-${Date.now().toString(36)}`,
+          name,
+          unit,
+          kind: normalizeKind(null, unit),
+        });
+        const persisted = persistState();
+        nodes.activityForm.reset();
+        nodes.activityForm.elements.unit.value = '次';
+        renderAll();
+        loadFormForDate(nodes.dateInput.value);
+        if (persisted) {
+          setStatus(`已新增动作：${name}。`);
+        }
+      }
+
+      function removeActivity(activityId) {
+        const activity = state.activities.find((item) => item.id === activityId);
+        if (!activity || DEFAULT_ACTIVITY_IDS.has(activityId)) {
+          return;
+        }
+        const confirmed = window.confirm(`确定移除「${activity.name}」吗？相关历史数值也会从本地记录中删除。`);
+        if (!confirmed) {
+          return;
+        }
+        state.activities = state.activities.filter((item) => item.id !== activityId);
+        state.records = state.records
+          .map((record) => {
+            const values = { ...record.values };
+            delete values[activityId];
+            return record.note ? { ...record, values } : { date: record.date, values };
+          })
+          .filter((record) => Object.keys(record.values).length > 0 || record.note);
+        const persisted = persistState();
+        renderAll();
+        loadFormForDate(nodes.dateInput.value);
+        if (persisted) {
+          setStatus(`已移除动作：${activity.name}。`);
+        }
+      }
+
+      function getPeriodRange(period) {
+        const now = new Date();
+        if (period === 'month') {
+          const start = new Date(now.getFullYear(), now.getMonth(), 1);
+          const end = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+          return {
+            start,
+            end,
+            label: `${formatDateForLabel(start)} 至 ${formatDateForLabel(end)}`,
+          };
+        }
+        if (period === 'year') {
+          const start = new Date(now.getFullYear(), 0, 1);
+          const end = new Date(now.getFullYear(), 11, 31);
+          return { start, end, label: `${now.getFullYear()} 年` };
+        }
+
+        const start = startOfWeek(now);
+        const end = addDays(start, 6);
+        return {
+          start,
+          end,
+          label: `${formatDateForLabel(start)} 至 ${formatDateForLabel(end)}`,
+        };
+      }
+
+      function recordsInRange(start, end) {
+        const startKey = dateKeyFromDate(start);
+        const endKey = dateKeyFromDate(end);
+        return state.records.filter((record) => record.date >= startKey && record.date <= endKey);
+      }
+
+      function getTotals(records) {
+        const totals = new Map(state.activities.map((activity) => [activity.id, 0]));
+        records.forEach((record) => {
+          Object.entries(record.values || {}).forEach(([id, value]) => {
+            totals.set(id, (totals.get(id) || 0) + sanitizeNumber(value));
+          });
+        });
+        return totals;
+      }
+
+      function getBestActivity(totals) {
+        return state.activities
+          .map((activity) => ({ activity, total: totals.get(activity.id) || 0 }))
+          .filter((item) => item.total > 0)
+          .sort((a, b) => b.total - a.total)[0];
+      }
+
+      function buildTrendSeries(period) {
+        if (period === 'year') {
+          const now = new Date();
+          return Array.from({ length: 12 }, (_, month) => {
+            const start = new Date(now.getFullYear(), month, 1);
+            const end = new Date(now.getFullYear(), month + 1, 0);
+            return {
+              label: `${month + 1} 月`,
+              shortLabel: `${month + 1}月`,
+              value: recordsInRange(start, end).reduce((sum, record) => sum + recordTotal(record), 0),
+            };
+          });
+        }
+
+        const range = getPeriodRange(period);
+        return dateKeysBetween(range.start, range.end).map((key) => {
+          const record = state.records.find((item) => item.date === key);
+          return {
+            label: key,
+            shortLabel: period === 'week' ? weekdayLabel(parseDateKey(key)) : String(parseDateKey(key).getDate()),
+            value: recordTotal(record),
+          };
+        });
+      }
+
+      function getChartLabels(points) {
+        if (points.length <= 12) {
+          return points;
+        }
+        const lastIndex = points.length - 1;
+        return points.filter((point, index) => index === 0 || index === lastIndex || index % 7 === 0);
+      }
+
+      function buildCsv() {
+        const headers = ['date', ...state.activities.map((activity) => activity.name), 'note'];
+        const rows = sortRecords(state.records)
+          .slice()
+          .reverse()
+          .map((record) => [
+            record.date,
+            ...state.activities.map((activity) => record.values?.[activity.id] || 0),
+            record.note || '',
+          ]);
+        return `\ufeff${[headers, ...rows].map((row) => row.map(csvCell).join(',')).join('\n')}`;
+      }
+
+      function csvCell(value) {
+        const text = String(value);
+        if (/[",\n]/.test(text)) {
+          return `"${text.replace(/"/g, '""')}"`;
+        }
+        return text;
+      }
+
+      function downloadFile(filename, type, content) {
+        const blob = new Blob([content], { type });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function recordTotal(record) {
+        return Object.values(record?.values || {}).reduce((sum, value) => sum + sanitizeNumber(value), 0);
+      }
+
+      function recordHasValues(record) {
+        return recordTotal(record) > 0;
+      }
+
+      function formatRecordSummary(record) {
+        const parts = state.activities
+          .map((activity) => {
+            const value = record.values?.[activity.id] || 0;
+            return value > 0 ? `${activity.name} ${formatNumber(value)} ${activity.unit}` : null;
+          })
+          .filter(Boolean);
+        return parts.length > 0 ? parts.join('，') : '只有备注';
+      }
+
+      function sortRecords(records) {
+        return records.slice().sort((a, b) => b.date.localeCompare(a.date));
+      }
+
+      function sanitizeNumber(value) {
+        const number = Number.parseFloat(value);
+        if (!Number.isFinite(number) || number <= 0) {
+          return 0;
+        }
+        return Math.round(number * 100) / 100;
+      }
+
+      function normalizeKind(kind, unit) {
+        if (kind === 'distance' || kind === 'reps' || kind === 'time') {
+          return kind;
+        }
+        const normalizedUnit = String(unit || '').trim().toLowerCase();
+        if (normalizedUnit === 'km' || normalizedUnit === '公里') {
+          return 'distance';
+        }
+        if (normalizedUnit === '秒' || normalizedUnit === '分钟' || normalizedUnit === 'min') {
+          return 'time';
+        }
+        return 'reps';
+      }
+
+      function activityKindLabel(kind) {
+        if (kind === 'distance') {
+          return '距离';
+        }
+        if (kind === 'time') {
+          return '时长';
+        }
+        return '次数';
+      }
+
+      function isDateKey(value) {
+        return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
+      }
+
+      function parseDateKey(key) {
+        const [year, month, day] = key.split('-').map(Number);
+        return new Date(year, month - 1, day);
+      }
+
+      function todayKey() {
+        return dateKeyFromDate(new Date());
+      }
+
+      function dateKeyFromDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+      }
+
+      function startOfWeek(date) {
+        const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        const offset = (copy.getDay() + 6) % 7;
+        copy.setDate(copy.getDate() - offset);
+        return copy;
+      }
+
+      function addDays(date, days) {
+        const copy = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+        copy.setDate(copy.getDate() + days);
+        return copy;
+      }
+
+      function dateKeysBetween(start, end) {
+        const keys = [];
+        for (let date = new Date(start); date <= end; date = addDays(date, 1)) {
+          keys.push(dateKeyFromDate(date));
+        }
+        return keys;
+      }
+
+      function formatDateForLabel(date) {
+        return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+      }
+
+      function weekdayLabel(date) {
+        return ['日', '一', '二', '三', '四', '五', '六'][date.getDay()];
+      }
+
+      function formatNumber(value) {
+        return Number(value || 0).toLocaleString('zh-CN', {
+          maximumFractionDigits: 2,
+        });
+      }
+
+      function getIntensity(total, maxTotal) {
+        if (total <= 0 || maxTotal <= 0) {
+          return 0;
+        }
+        return Math.max(1, Math.ceil((total / maxTotal) * 3));
+      }
+
+      function setStatus(message) {
+        nodes.status.textContent = message;
+      }
+    }
+  </script>
+</BaseLayout>
