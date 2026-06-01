@@ -1,0 +1,8 @@
+name = "aowei-blog"
+compatibility_date = "2026-06-01"
+pages_build_output_dir = "dist"
+
+[[d1_databases]]
+binding = "FITNESS_DB"
+database_name = "aowei-fitness"
+database_id = "39763693-80a0-44ba-ac8a-11f5b7787ad3"

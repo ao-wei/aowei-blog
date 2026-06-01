@@ -12,8 +12,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </p>
     </div>
     <div class="fitness-privacy-panel" aria-label="隐私说明">
-      <strong>本地保存</strong>
-      <p>记录默认只存在当前浏览器。导出的 JSON 或 CSV 可用于备份，不会自动写入仓库或云端。</p>
+      <strong>本地优先，云端同步</strong>
+      <p>记录会先保存在当前浏览器；配置同步密钥后，会通过 Cloudflare D1 在不同浏览器之间同步。</p>
     </div>
   </section>
 
@@ -176,6 +176,23 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <p class="fitness-help">
           JSON 会保留动作配置和每日记录；CSV 更适合表格查看。导入 JSON 会替换当前浏览器里的本地数据。
         </p>
+        <div class="fitness-sync-box">
+          <label class="fitness-field">
+            <span>同步密钥</span>
+            <input
+              type="password"
+              autocomplete="off"
+              data-sync-token
+              placeholder="输入 Cloudflare 环境变量中的 FITNESS_API_TOKEN"
+            />
+          </label>
+          <div class="fitness-actions">
+            <button class="button" type="button" data-save-sync-token>保存密钥</button>
+            <button class="button" type="button" data-pull-cloud>从云端读取</button>
+            <button class="button" type="button" data-forget-sync-token>忘记密钥</button>
+          </div>
+          <p class="fitness-sync-status" data-sync-status>本地模式</p>
+        </div>
       </article>
 
       <article class="fitness-panel">
@@ -198,6 +215,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
   <script>
     const STORAGE_KEY = 'aowei-fitness-v1';
+    const TOKEN_KEY = 'aowei-fitness-token-v1';
+    const API_ENDPOINT = '/api/fitness';
     const DEFAULT_ACTIVITIES = [
       { id: 'running', name: '跑步', unit: 'km', kind: 'distance' },
       { id: 'pushups', name: '俯卧撑', unit: '次', kind: 'reps' },
@@ -233,16 +252,25 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         exportCsv: app.querySelector('[data-export-csv]'),
         importJson: app.querySelector('[data-import-json]'),
         clearLocal: app.querySelector('[data-clear-local]'),
+        syncTokenInput: app.querySelector('[data-sync-token]'),
+        saveSyncTokenButton: app.querySelector('[data-save-sync-token]'),
+        forgetSyncTokenButton: app.querySelector('[data-forget-sync-token]'),
+        pullCloudButton: app.querySelector('[data-pull-cloud]'),
+        syncStatus: app.querySelector('[data-sync-status]'),
         recentList: app.querySelector('[data-recent-list]'),
         status: app.querySelector('[data-status]'),
       };
 
       let state = loadState();
       let activePeriod = 'week';
+      let syncToken = loadSyncToken();
 
       nodes.dateInput.value = todayKey();
+      nodes.syncTokenInput.value = syncToken;
       renderAll();
       loadFormForDate(nodes.dateInput.value);
+      setSyncStatus(syncToken ? '已保存同步密钥，正在读取云端记录。' : '本地模式：未配置同步密钥。');
+      hydrateFromRemote();
 
       nodes.periodButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -356,12 +384,43 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           return;
         }
         state = createDefaultState();
-        const persisted = persistState();
+        const persisted = persistState({ syncRemote: false });
         renderAll();
         loadFormForDate(nodes.dateInput.value);
         if (persisted) {
           setStatus('已清空当前浏览器里的本地记录。');
+          setSyncStatus(syncToken ? '只清空了当前浏览器，本次没有清空云端记录。' : '本地记录已清空。');
         }
+      });
+
+      nodes.saveSyncTokenButton.addEventListener('click', () => {
+        const nextToken = nodes.syncTokenInput.value.trim();
+        if (!nextToken) {
+          setSyncStatus('请输入同步密钥。');
+          return;
+        }
+        syncToken = nextToken;
+        saveSyncToken(syncToken);
+        setSyncStatus('同步密钥已保存，正在从云端读取记录。');
+        hydrateFromRemote();
+      });
+
+      nodes.forgetSyncTokenButton.addEventListener('click', () => {
+        syncToken = '';
+        nodes.syncTokenInput.value = '';
+        window.localStorage.removeItem(TOKEN_KEY);
+        setSyncStatus('已忘记同步密钥，当前只使用本地记录。');
+      });
+
+      nodes.pullCloudButton.addEventListener('click', () => {
+        syncToken = nodes.syncTokenInput.value.trim() || syncToken;
+        if (!syncToken) {
+          setSyncStatus('请输入同步密钥后再读取云端记录。');
+          return;
+        }
+        saveSyncToken(syncToken);
+        nodes.syncTokenInput.value = syncToken;
+        hydrateFromRemote();
       });
 
       function createDefaultState() {
@@ -382,14 +441,115 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         }
       }
 
-      function persistState() {
+      function persistState(options = {}) {
         try {
           window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          if (options.syncRemote !== false) {
+            syncRemoteState();
+          }
           return true;
         } catch (error) {
           setStatus('无法写入本地存储，请检查浏览器隐私设置或存储空间。');
           return false;
         }
+      }
+
+      function loadSyncToken() {
+        try {
+          return window.localStorage.getItem(TOKEN_KEY) || '';
+        } catch (error) {
+          return '';
+        }
+      }
+
+      function saveSyncToken(token) {
+        try {
+          window.localStorage.setItem(TOKEN_KEY, token);
+          return true;
+        } catch (error) {
+          setSyncStatus('无法保存同步密钥，请检查浏览器隐私设置。');
+          return false;
+        }
+      }
+
+      async function hydrateFromRemote() {
+        if (!syncToken) {
+          return;
+        }
+
+        try {
+          const remoteState = await fetchRemoteState();
+          state = mergeStates(state, remoteState);
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+          renderAll();
+          loadFormForDate(nodes.dateInput.value);
+          setSyncStatus(`已合并云端记录，共 ${state.records.length} 条。`);
+          syncRemoteState();
+        } catch (error) {
+          setSyncStatus(error.message || '云端读取失败，当前继续使用本地记录。');
+        }
+      }
+
+      async function syncRemoteState() {
+        if (!syncToken) {
+          setSyncStatus('本地模式：未配置同步密钥。');
+          return;
+        }
+
+        try {
+          const response = await fetch(API_ENDPOINT, {
+            method: 'PUT',
+            headers: {
+              ...authHeaders(),
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(state),
+          });
+
+          if (!response.ok) {
+            throw new Error(await readApiError(response, '云端同步失败。'));
+          }
+          setSyncStatus('已同步到 Cloudflare D1。');
+        } catch (error) {
+          setSyncStatus(error.message || '云端同步失败，本地记录已保留。');
+        }
+      }
+
+      async function fetchRemoteState() {
+        const response = await fetch(API_ENDPOINT, {
+          headers: authHeaders(),
+          cache: 'no-store',
+        });
+
+        if (!response.ok) {
+          throw new Error(await readApiError(response, '云端读取失败。'));
+        }
+        return response.json();
+      }
+
+      function authHeaders() {
+        return {
+          Authorization: `Bearer ${syncToken}`,
+        };
+      }
+
+      async function readApiError(response, fallback) {
+        try {
+          const data = await response.json();
+          return data.error || fallback;
+        } catch (error) {
+          return fallback;
+        }
+      }
+
+      function mergeStates(localState, remoteState) {
+        const local = normalizeState(localState);
+        const remote = normalizeState(remoteState);
+        return normalizeState({
+          version: 1,
+          activities: [...local.activities, ...remote.activities],
+          records: [...local.records, ...remote.records],
+        });
       }
 
       function normalizeState(input) {
@@ -1066,6 +1226,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
       function setStatus(message) {
         nodes.status.textContent = message;
+      }
+
+      function setSyncStatus(message) {
+        nodes.syncStatus.textContent = message;
       }
     }
   </script>
