@@ -772,6 +772,494 @@ h3 {
   object-fit: cover;
 }
 
+.fitness-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 340px);
+  align-items: center;
+  gap: 42px;
+  padding-top: 68px;
+}
+
+.fitness-privacy-panel,
+.fitness-panel,
+.fitness-stat {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.fitness-privacy-panel {
+  padding: 22px;
+  background:
+    linear-gradient(145deg, color-mix(in srgb, #f6d56f 16%, transparent), transparent 48%),
+    color-mix(in srgb, var(--surface) 82%, var(--accent-soft));
+  box-shadow: 0 18px 45px color-mix(in srgb, var(--text) 7%, transparent);
+}
+
+.fitness-privacy-panel strong {
+  display: block;
+  font-size: 1.05rem;
+}
+
+.fitness-privacy-panel p,
+.fitness-help,
+.fitness-status {
+  margin: 10px 0 0;
+  color: var(--muted);
+}
+
+.fitness-workspace {
+  display: grid;
+  gap: 18px;
+  padding-top: 20px;
+}
+
+.fitness-workspace button {
+  cursor: pointer;
+}
+
+.fitness-workspace button:disabled {
+  cursor: not-allowed;
+}
+
+.fitness-period-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 86%, var(--surface-muted));
+}
+
+.fitness-period-tabs {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.fitness-period-tabs button,
+.fitness-row-action {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.fitness-period-tabs button.is-active {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+  color: white;
+}
+
+.fitness-period-bar > span,
+.fitness-fieldset-head small {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.fitness-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.fitness-stat {
+  min-height: 116px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px;
+}
+
+.fitness-stat span,
+.fitness-field > span,
+.fitness-fieldset-head span,
+.fitness-activity-row span,
+.fitness-total-row span {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 650;
+}
+
+.fitness-stat strong {
+  font-size: clamp(1.32rem, 3vw, 1.9rem);
+  line-height: 1.15;
+}
+
+.fitness-dashboard {
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(280px, 0.88fr);
+  gap: 18px;
+}
+
+.fitness-dashboard-wide {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.fitness-panel {
+  min-width: 0;
+  padding: 22px;
+}
+
+.fitness-panel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.fitness-panel-head .eyebrow {
+  margin-bottom: 8px;
+}
+
+.fitness-panel h2 {
+  font-size: clamp(1.35rem, 3vw, 1.9rem);
+}
+
+.fitness-form,
+.fitness-custom-form {
+  display: grid;
+  gap: 14px;
+}
+
+.fitness-field,
+.fitness-fieldset {
+  display: grid;
+  gap: 8px;
+}
+
+.fitness-field input,
+.fitness-field textarea,
+.fitness-activity-field input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 92%, var(--surface-muted));
+  color: var(--text);
+}
+
+.fitness-field input,
+.fitness-activity-field input {
+  padding: 0 12px;
+}
+
+.fitness-field textarea {
+  resize: vertical;
+  padding: 10px 12px;
+}
+
+.fitness-field input:focus,
+.fitness-field textarea:focus,
+.fitness-activity-field input:focus {
+  border-color: color-mix(in srgb, var(--accent) 70%, var(--line));
+  outline: 3px solid color-mix(in srgb, var(--accent) 26%, transparent);
+}
+
+.fitness-fieldset {
+  padding-top: 4px;
+}
+
+.fitness-fieldset-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fitness-activity-inputs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(165px, 1fr));
+  gap: 10px;
+}
+
+.fitness-activity-field {
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 72%, var(--surface-muted));
+}
+
+.fitness-activity-field > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fitness-activity-field small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.fitness-actions,
+.fitness-file-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.fitness-status {
+  min-height: 1.65em;
+  font-size: 0.92rem;
+}
+
+.fitness-custom-form {
+  grid-template-columns: minmax(0, 1fr) minmax(90px, 120px) auto;
+  align-items: end;
+}
+
+.fitness-activity-list,
+.fitness-total-list,
+.fitness-recent-list {
+  display: grid;
+  gap: 0;
+  margin-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.fitness-activity-row,
+.fitness-total-row,
+.fitness-recent-row {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.fitness-activity-row > div,
+.fitness-recent-row {
+  min-width: 0;
+}
+
+.fitness-activity-row strong,
+.fitness-activity-row span {
+  display: block;
+}
+
+.fitness-row-action {
+  flex: 0 0 auto;
+}
+
+.fitness-row-action:disabled {
+  background: var(--surface-muted);
+}
+
+.fitness-chip {
+  min-height: 30px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent-soft) 62%, white);
+  color: var(--accent-strong);
+  font-size: 0.84rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.fitness-calendar {
+  display: grid;
+  gap: 8px;
+}
+
+.fitness-calendar-weekdays,
+.fitness-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 7px;
+}
+
+.fitness-calendar-weekdays span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.fitness-calendar-blank,
+.fitness-calendar-day {
+  min-width: 0;
+  aspect-ratio: 1;
+  border-radius: 8px;
+}
+
+.fitness-calendar-day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface-muted);
+  color: var(--muted);
+  text-align: left;
+}
+
+.fitness-calendar-day strong {
+  color: var(--text);
+  font-size: 0.86rem;
+  line-height: 1;
+}
+
+.fitness-calendar-day span {
+  max-width: 100%;
+  overflow: hidden;
+  color: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fitness-calendar-day.level-1 {
+  border-color: color-mix(in srgb, var(--accent) 32%, var(--line));
+  background: color-mix(in srgb, var(--accent-soft) 76%, white);
+  color: var(--accent-strong);
+}
+
+.fitness-calendar-day.level-2 {
+  border-color: color-mix(in srgb, var(--accent) 52%, var(--line));
+  background: color-mix(in srgb, var(--accent) 26%, white);
+  color: var(--accent-strong);
+}
+
+.fitness-calendar-day.level-3 {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+  color: white;
+}
+
+.fitness-calendar-day.level-3 strong,
+.fitness-calendar-day.level-3 span {
+  color: white;
+}
+
+.fitness-calendar-day.is-today {
+  outline: 3px solid color-mix(in srgb, #f6d56f 60%, transparent);
+  outline-offset: 2px;
+}
+
+.fitness-chart-wrap {
+  position: relative;
+  min-height: 218px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--surface) 78%, var(--surface-muted));
+}
+
+.fitness-chart {
+  width: 100%;
+  height: 218px;
+  display: block;
+}
+
+.fitness-chart-grid {
+  stroke: color-mix(in srgb, var(--line) 72%, transparent);
+  stroke-width: 1;
+}
+
+.fitness-chart-line {
+  fill: none;
+  stroke: var(--accent-strong);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 4;
+}
+
+.fitness-chart-dot {
+  fill: var(--accent-strong);
+  stroke: var(--surface);
+  stroke-width: 2;
+}
+
+.fitness-chart-dot.is-empty {
+  fill: var(--surface-muted);
+  stroke: var(--line);
+}
+
+.fitness-chart-label {
+  fill: var(--muted);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.fitness-chart-empty {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  margin: 0;
+  color: var(--muted);
+  font-weight: 700;
+  pointer-events: none;
+}
+
+.fitness-file-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.fitness-file-button input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.fitness-sync-box {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.fitness-sync-status {
+  min-height: 1.65em;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.fitness-recent-row {
+  width: 100%;
+  border-top: 0;
+  border-right: 0;
+  border-left: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+}
+
+.fitness-recent-row strong {
+  flex: 0 0 108px;
+}
+
+.fitness-recent-row span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .prose {
   max-width: 760px;
   padding: 58px 0 72px;
@@ -862,13 +1350,20 @@ h3 {
     max-width: 360px;
   }
 
-  .guagua-hero {
+  .guagua-hero,
+  .fitness-hero,
+  .fitness-dashboard,
+  .fitness-dashboard-wide {
     grid-template-columns: 1fr;
   }
 
   .guagua-hero-photo,
   .guagua-hero-empty {
     max-width: 430px;
+  }
+
+  .fitness-privacy-panel {
+    max-width: 440px;
   }
 
   .guagua-profile-grid {
@@ -910,13 +1405,46 @@ h3 {
 
   .guagua-hero,
   .guagua-profile-grid,
-  .guagua-video-grid {
+  .guagua-video-grid,
+  .fitness-stat-grid {
     grid-template-columns: 1fr;
   }
 
   .guagua-hero {
     gap: 26px;
     padding-top: 48px;
+  }
+
+  .fitness-hero {
+    gap: 24px;
+    padding-top: 48px;
+  }
+
+  .fitness-period-bar,
+  .fitness-fieldset-head,
+  .fitness-panel-head,
+  .fitness-activity-row,
+  .fitness-total-row,
+  .fitness-recent-row {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .fitness-custom-form {
+    grid-template-columns: 1fr;
+  }
+
+  .fitness-calendar-weekdays,
+  .fitness-calendar-grid {
+    gap: 5px;
+  }
+
+  .fitness-calendar-day {
+    padding: 6px;
+  }
+
+  .fitness-recent-row strong {
+    flex-basis: auto;
   }
 
   .resume-hero {
