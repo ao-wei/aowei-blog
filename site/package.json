@@ -14,6 +14,9 @@
   },
   "dependencies": {
     "astro": "^6.3.7",
+    "katex": "^0.17.0",
+    "rehype-katex": "^7.0.1",
+    "remark-math": "^6.0.0",
     "rollup": "npm:@rollup/wasm-node@^4.60.4"
   },
   "devDependencies": {
