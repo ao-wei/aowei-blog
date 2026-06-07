@@ -1,4 +1,5 @@
 ---
+import { getCollection } from 'astro:content';
 import 'katex/dist/katex.min.css';
 import '../styles/global.css';
 import OnekoPatrol from '../components/OnekoPatrol.astro';
@@ -14,6 +15,17 @@ const {
 } = Astro.props;
 
 const pageTitle = title === '敖炜的博客' ? title : `${title} | Aowei 博客`;
+
+const searchPosts = (await getCollection('blog'))
+  .filter((post) => !post.data.draft)
+  .sort((a, b) => b.data.published.getTime() - a.data.published.getTime());
+const searchIndex = searchPosts.map((post) => ({
+  title: post.data.title,
+  description: post.data.description,
+  href: `/blog/${post.id}`,
+  text: [post.data.title, post.data.description, post.data.tags.join(' '), post.body ?? ''].join('\n'),
+}));
+const searchDataJson = JSON.stringify(searchIndex).replace(/</g, '\\u003c');
 ---
 
 <!doctype html>
@@ -33,11 +45,26 @@ const pageTitle = title === '敖炜的博客' ? title : `${title} | Aowei 博客
             <span class="brand-mark" aria-hidden="true">A</span>
             <span>敖炜的博客</span>
           </a>
-          <div class="nav-links">
-            <a href="/profile">关于我</a>
-            <a href="/blog">文章</a>
-            <a href="/projects">项目</a>
-            <a href="/about">关于网站</a>
+          <div class="nav-actions">
+            <form class="site-search" role="search" data-site-search>
+              <input
+                type="search"
+                autocomplete="off"
+                aria-label="搜索文章"
+                placeholder="搜索文章"
+                data-site-search-input
+              />
+              <div class="site-search-panel" data-site-search-panel hidden>
+                <p class="site-search-status" data-site-search-status>输入关键词搜索文章。</p>
+                <ol class="site-search-results" data-site-search-results></ol>
+              </div>
+            </form>
+            <div class="nav-links">
+              <a href="/profile">关于我</a>
+              <a href="/blog">文章</a>
+              <a href="/projects">项目</a>
+              <a href="/about">关于网站</a>
+            </div>
           </div>
         </nav>
       </header>
@@ -52,5 +79,89 @@ const pageTitle = title === '敖炜的博客' ? title : `${title} | Aowei 博客
         </div>
       </footer>
     </div>
+    <script type="application/json" id="site-search-data" set:html={searchDataJson}></script>
+    <script is:inline>
+      (() => {
+        const searchDataElement = document.getElementById('site-search-data');
+        const searchForm = document.querySelector('[data-site-search]');
+        const searchInput = document.querySelector('[data-site-search-input]');
+        const searchPanel = document.querySelector('[data-site-search-panel]');
+        const searchStatus = document.querySelector('[data-site-search-status]');
+        const searchResults = document.querySelector('[data-site-search-results]');
+
+        const normalizeSearchText = (value) => value.normalize('NFKC').toLocaleLowerCase();
+
+        if (!searchDataElement || !searchForm || !searchInput || !searchPanel || !searchStatus || !searchResults) {
+          return;
+        }
+
+        const searchIndex = JSON.parse(searchDataElement.textContent || '[]').map((item) => ({
+          ...item,
+          normalizedText: normalizeSearchText(item.text || ''),
+        }));
+        let visibleResults = [];
+
+        const renderResults = () => {
+          const terms = normalizeSearchText(searchInput.value).trim().split(/\s+/).filter(Boolean);
+          searchResults.textContent = '';
+
+          if (terms.length === 0) {
+            visibleResults = [];
+            searchPanel.hidden = true;
+            return;
+          }
+
+          visibleResults = searchIndex
+            .filter((item) => terms.every((term) => item.normalizedText.includes(term)))
+            .slice(0, 6);
+
+          if (visibleResults.length === 0) {
+            searchStatus.textContent = '没有匹配的文章。';
+            searchPanel.hidden = false;
+            return;
+          }
+
+          searchStatus.textContent = `${visibleResults.length} 篇匹配`;
+          visibleResults.forEach((item) => {
+            const resultItem = document.createElement('li');
+            const link = document.createElement('a');
+            const title = document.createElement('strong');
+            const description = document.createElement('span');
+
+            link.href = item.href;
+            title.textContent = item.title;
+            description.textContent = item.description;
+            link.append(title, description);
+            resultItem.append(link);
+            searchResults.append(resultItem);
+          });
+          searchPanel.hidden = false;
+        };
+
+        searchForm.addEventListener('submit', (event) => {
+          event.preventDefault();
+          if (visibleResults[0]) {
+            window.location.href = visibleResults[0].href;
+          } else if (searchInput.value.trim() === '') {
+            window.location.href = '/blog/';
+          }
+        });
+
+        searchInput.addEventListener('input', renderResults);
+        searchInput.addEventListener('search', renderResults);
+        searchInput.addEventListener('focus', renderResults);
+        searchInput.addEventListener('keydown', (event) => {
+          if (event.key === 'Escape') {
+            searchPanel.hidden = true;
+            searchInput.blur();
+          }
+        });
+        document.addEventListener('click', (event) => {
+          if (!searchForm.contains(event.target)) {
+            searchPanel.hidden = true;
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

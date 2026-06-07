@@ -12,7 +12,8 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
+const tocHeadings = headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
 
 const formattedDate = new Intl.DateTimeFormat('zh-CN', {
   year: 'numeric',
@@ -22,23 +23,57 @@ const formattedDate = new Intl.DateTimeFormat('zh-CN', {
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
-  <article class="prose">
-    <header class="prose-header">
-      <p class="eyebrow">{formattedDate}</p>
-      <h1>{post.data.title}</h1>
-      <p class="prose-description">{post.data.description}</p>
+  <div class:list={['article-layout', tocHeadings.length > 0 && 'has-toc']}>
+    <article class="prose">
+      <header class="prose-header">
+        <p class="eyebrow">{formattedDate}</p>
+        <h1>{post.data.title}</h1>
+        <p class="prose-description">{post.data.description}</p>
+        {
+          post.data.tags.length > 0 && (
+            <div class="tags">
+              {post.data.tags.map((tag) => (
+                <span class="tag">{tag}</span>
+              ))}
+            </div>
+          )
+        }
+      </header>
       {
-        post.data.tags.length > 0 && (
-          <div class="tags">
-            {post.data.tags.map((tag) => (
-              <span class="tag">{tag}</span>
-            ))}
-          </div>
+        tocHeadings.length > 0 && (
+          <aside class="article-toc article-toc-mobile" aria-label="文章目录">
+            <details class="article-toc-details" open>
+              <summary>目录</summary>
+              <ol>
+                {tocHeadings.map((heading) => (
+                  <li class={`toc-depth-${heading.depth}`}>
+                    <a href={`#${heading.slug}`}>{heading.text}</a>
+                  </li>
+                ))}
+              </ol>
+            </details>
+          </aside>
         )
       }
-    </header>
-    <div class="prose-content">
-      <Content />
-    </div>
-  </article>
+      <div class="prose-content">
+        <Content />
+      </div>
+    </article>
+    {
+      tocHeadings.length > 0 && (
+        <aside class="article-toc article-toc-desktop" aria-label="文章目录">
+          <details class="article-toc-details" open>
+            <summary>目录</summary>
+            <ol>
+              {tocHeadings.map((heading) => (
+                <li class={`toc-depth-${heading.depth}`}>
+                  <a href={`#${heading.slug}`}>{heading.text}</a>
+                </li>
+              ))}
+            </ol>
+          </details>
+        </aside>
+      )
+    }
+  </div>
 </BaseLayout>
